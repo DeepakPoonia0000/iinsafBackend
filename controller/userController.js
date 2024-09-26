@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
         const { userName, userEmail, userPassword, phoneNumber, userState, userCity, joinAs, gender } = req.body;
 
         // Check if all fields are present
-        if (!userName || !userEmail || !userPassword || !phoneNumber || !userState || !userCity) {
+        if (!userName || !userEmail || !userPassword || !phoneNumber || !userState || !userCity || !joinAs || !gender) {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
 
@@ -48,7 +48,6 @@ const registerUser = async (req, res) => {
         // Check if an OTP already exists for the userEmail
         let existingOtp = await Otp.findOne({ userEmail });
 
-        // console.log("user is here")
         if (existingOtp) {
             // Update the existing OTP
             existingOtp.otp = OTP;
@@ -57,8 +56,9 @@ const registerUser = async (req, res) => {
         } else {
             // Create new OTP record
             const newOtp = new Otp({
+                userEmail,  // Use userEmail, not email
                 otp: OTP,
-                email: userEmail
+                expireAt: new Date() // Optionally add this if expireAt needs to be updated
             });
             await newOtp.save();
         }
@@ -82,6 +82,7 @@ const registerUser = async (req, res) => {
         await transporter.sendMail(mailOptions);
 
         // Create new user with the original password
+        await UnverifiedUser.findOneAndDelete({ userEmail })
         const newUser = new UnverifiedUser({
             userName,
             userEmail,
@@ -102,6 +103,8 @@ const registerUser = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+
 
 // Login a user
 const loginUser = async (req, res) => {

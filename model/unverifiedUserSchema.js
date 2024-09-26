@@ -32,11 +32,11 @@ const unverifiedUserSchema = new mongoose.Schema({
     },
     joinAs: {
         type: String,
-        required: [true, 'Join as field is required']
+        // required: [true, 'Join as field is required'],
     },
     gender: {
         type: String,
-        required: [true, 'Gender is required'],
+        // required: [true, 'Gender is required'],
         enum: ['male', 'female'] // Consider using enum for gender
     },
     status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
