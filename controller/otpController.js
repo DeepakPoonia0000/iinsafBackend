@@ -192,7 +192,7 @@ const verifyOtpPassword = async (req, res) => {
             return res.status(400).json({ error: 'Invalid OTP.' });
         }
 
-        const user =await User.findOne({ userEmail });
+        const user = await User.findOne({ userEmail });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });

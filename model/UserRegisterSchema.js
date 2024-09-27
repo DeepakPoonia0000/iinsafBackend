@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema({
         // required: [true, 'Gender is required'],
         enum: ['male', 'female'] // Consider using enum for gender
     },
+    userWebsite: String,
+    userArea: String,
+    userPincode:String,
+    userSecondaryPhone:String,
+    whatsappNumber:String,
     status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
     isVerified: { type: Boolean, default: false }, // Correctly defined
 

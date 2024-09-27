@@ -9,7 +9,7 @@ const nodemailer = require('nodemailer');
 const JWT_SECRET = "qweRTYUI!@#$ERFC^X$Ex5DC68*()09780-0*(_"; // Use environment variables in production
 
 // Middleware to verify token
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     const token = req.header('Authorization'); // Assuming token is sent in headers
     if (!token) {
         return res.status(401).json({ message: "No token, authorization denied" });
@@ -18,6 +18,8 @@ const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.userId = decoded.id;
+        const user = await User.findById(req.userId);
+        req.userName = user.userName;
         next();
     } catch (error) {
         res.status(401).json({ message: "Invalid token" });
@@ -107,7 +109,7 @@ const registerUser = async (req, res) => {
 
 
 // Login a user
-const loginUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
     try {
         const { userEmail, userPassword } = req.body;
 
@@ -141,4 +143,74 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, verifyToken };
+exports.userProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select("-password");
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+const User = require('../models/userModel'); // Adjust the path as needed
+
+exports.updateUserDetails = async (req, res) => {
+    try {
+        const { userId } = req; // Assuming you're passing userId through middleware/authentication
+        const {
+            userName,
+            userEmail,
+            userState,
+            userCity,
+            phoneNumber,
+            userArea,
+            userPincode,
+            userSecondaryPhone,
+            whatsappNumber,
+            userWebsite
+        } = req.body;
+
+        // Check for required fields
+        if (!userName || !userEmail || !userState || !userCity || !phoneNumber || !userPincode) {
+            return res.status(400).json({
+                message: 'Name, Email, State, City, Phone number, and Pincode are required.'
+            });
+        }
+
+        // Prepare the update object
+        const updateData = {
+            userName,
+            userEmail,
+            userState,
+            userCity,
+            phoneNumber,
+            userArea,
+            userPincode,
+            userSecondaryPhone,
+            whatsappNumber,
+            userWebsite
+        };
+
+        // Update the user details
+        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Send the updated user details back in the response
+        res.status(200).json({
+            message: 'User details updated successfully',
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
+
+module.exports = { registerUser, verifyToken };
