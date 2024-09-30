@@ -1,7 +1,7 @@
 const Lead = require('../model/leadSchema');
 
 // Create a new lead (processing fields individually and modifying data)
-exports.createLead = async (req, res) => {
+const createLead = async (req, res) => {
     try {
         // Extract individual fields from req.body
         const { userId, userName } = req;
@@ -68,7 +68,7 @@ exports.createLead = async (req, res) => {
 
 
 // Update an existing lead
-// exports.updateLead = async (req, res) => {
+// const updateLead = async (req, res) => {
 //     try {
 //         const { userId, userName } = req;
 //         // Extract individual fields from req.body
@@ -124,11 +124,13 @@ exports.createLead = async (req, res) => {
 
 
 // Delete an existing lead
-exports.deleteLead = async (req, res) => {
+
+const deleteLead = async (req, res) => {
     try {
         const { userId } = req;
+        const leadId = req.query.id;
         // Find the lead by ID and delete it
-        const deletedLead = await Lead.findByIdAndDelete(req.params.id);
+        const deletedLead = await Lead.findByIdAndDelete(leadId);
 
         if (!deletedLead) {
             return res.status(404).json({
@@ -153,7 +155,7 @@ exports.deleteLead = async (req, res) => {
 };
 
 
-exports.getuserLeads = async (req, res) => {
+const getuserLeads = async (req, res) => {
     try {
         const { userId } = req;
         const { status } = req.query;
@@ -177,3 +179,5 @@ exports.getuserLeads = async (req, res) => {
         });
     }
 };
+
+module.exports = { createLead, deleteLead, getuserLeads }

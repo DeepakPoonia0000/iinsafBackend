@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 // Define the Conference schema
 const conferenceSchema = new mongoose.Schema({
-    conferenceBy:String,
-    conferenceByName:String,
+    conferenceBy: { type: String, required: true, index: true },
+    conferenceByName: String,
     conferenceName: {
         type: String,
         required: true,
@@ -60,7 +60,7 @@ const conferenceSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: {
-            values: ["pending", "approved", "cancelled"],
+            values: ["pending", "approved", "cancelled","completed"],
             message: '{VALUE} is not a valid status'
         },
         default: "pending",

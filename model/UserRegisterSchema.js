@@ -32,7 +32,10 @@ const userSchema = new mongoose.Schema({
     },
     joinAs: {
         type: String,
-    },
+        enum: ["reporter", "advertiser", "influencer"],  // Enum values
+        required: true,  // Make the field mandatory
+        message: 'The value `{VALUE}` is not a valid option for joinAs'  // Custom error message
+      },      
     gender: {
         type: String,
         // required: [true, 'Gender is required'],
@@ -40,10 +43,10 @@ const userSchema = new mongoose.Schema({
     },
     userWebsite: String,
     userArea: String,
-    userPincode:String,
-    userSecondaryPhone:String,
-    whatsappNumber:String,
-    status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
+    userPincode: String,
+    userSecondaryPhone: String,
+    whatsappNumber: String,
+    status: { type: String, enum: ['pending', 'approved','blocked'], default: 'pending' },
     isVerified: { type: Boolean, default: false }, // Correctly defined
 
 }, { timestamps: true }); // Adding timestamps for createdAt and updatedAt

@@ -109,7 +109,7 @@ const registerUser = async (req, res) => {
 
 
 // Login a user
-exports.loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
     try {
         const { userEmail, userPassword } = req.body;
 
@@ -143,7 +143,7 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-exports.userProfile = async (req, res) => {
+const userProfile = async (req, res) => {
     try {
         const user = await User.findById(req.userId).select("-password");
         res.json(user);
@@ -153,9 +153,7 @@ exports.userProfile = async (req, res) => {
     }
 }
 
-const User = require('../models/userModel'); // Adjust the path as needed
-
-exports.updateUserDetails = async (req, res) => {
+const updateUserDetails = async (req, res) => {
     try {
         const { userId } = req; // Assuming you're passing userId through middleware/authentication
         const {
@@ -213,4 +211,4 @@ exports.updateUserDetails = async (req, res) => {
 
 
 
-module.exports = { registerUser, verifyToken };
+module.exports = { registerUser, verifyToken, loginUser, updateUserDetails, userProfile };

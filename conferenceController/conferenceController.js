@@ -1,61 +1,7 @@
 const Conference = require('../model/conferenceSchema');
 
-// Create a new conference
-exports.createConference = async (req, res) => {
-    try {
-        const { userId, userName } = req;
-        // Extract fields from the request body
-        const {
-            conferenceName,
-            whatsappNumber,
-            conferenceEmailAddress,
-            numberOfReporters,
-            conferenceDate,
-            conferenceChannelState,
-            conferenceChannelCity,
-            conferenceArea,
-            conferencePinCode,
-            conferencePurpose
-        } = req.body;
-
-        const modifiedConferenceCost = numberOfReporters * 500;
-
-        // Create a new conference object
-        const newConference = new Conference({
-            conferenceBy: userId,
-            conferenceByName: userName,
-            conferenceName,
-            whatsappNumber,
-            conferenceEmailAddress,
-            numberOfReporters,
-            conferenceCost: modifiedConferenceCost,
-            conferenceDate,
-            conferenceChannelState,
-            conferenceChannelCity,
-            conferenceArea,
-            conferencePinCode,
-            conferencePurpose
-        });
-
-        // Save the conference to the database
-        const savedConference = await newConference.save();
-
-        // Send the saved conference back in the response
-        res.status(201).json({
-            message: 'Conference created successfully',
-            conference: savedConference
-        });
-
-    } catch (error) {
-        res.status(400).json({
-            message: 'Error creating conference',
-            error: error.message
-        });
-    }
-};
-
 // Update a conference by ID
-// exports.updateConference = async (req, res) => {
+// const updateConference = async (req, res) => {
 //     try {
 //         const { id } = req.params;
 //         const {
@@ -109,10 +55,10 @@ exports.createConference = async (req, res) => {
 // };
 
 // Delete a conference by ID
-exports.deleteConference = async (req, res) => {
+const deleteConference = async (req, res) => {
     try {
-        const { conferenceId } = req.params;
-        const userId = req;
+        const { conferenceId } = req.query;
+        const { userId } = req;
 
         const conference = await Conference.findById(conferenceId);
 
@@ -140,7 +86,62 @@ exports.deleteConference = async (req, res) => {
     }
 };
 
-exports.getuserConference = async (req, res) => {
+
+// Create a new conference
+const createConference = async (req, res) => {
+    try {
+        const { userId, userName } = req;
+        // Extract fields from the request body
+        const {
+            conferenceName,
+            whatsappNumber,
+            conferenceEmailAddress,
+            numberOfReporters,
+            conferenceDate,
+            conferenceChannelState,
+            conferenceChannelCity,
+            conferenceArea,
+            conferencePinCode,
+            conferencePurpose
+        } = req.body;
+
+        const modifiedConferenceCost = numberOfReporters * 500;
+
+        // Create a new conference object
+        const newConference = new Conference({
+            conferenceBy: userId,
+            conferenceByName: userName,
+            conferenceName,
+            whatsappNumber,
+            conferenceEmailAddress,
+            numberOfReporters,
+            conferenceCost: modifiedConferenceCost,
+            conferenceDate,
+            conferenceChannelState,
+            conferenceChannelCity,
+            conferenceArea,
+            conferencePinCode,
+            conferencePurpose
+        });
+
+        // Save the conference to the database
+        const savedConference = await newConference.save();
+
+        // Send the saved conference back in the response
+        res.status(201).json({
+            message: 'Conference created successfully',
+            conference: savedConference
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            message: 'Error creating conference',
+            error: error.message
+        });
+    }
+};
+
+const getuserConference = async (req, res) => {
     try {
         const { userId } = req;
         const { status } = req.query;
@@ -164,3 +165,5 @@ exports.getuserConference = async (req, res) => {
         });
     }
 };
+
+module.exports = { createConference, deleteConference, getuserConference }

@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 
 const leadSchema = new mongoose.Schema({
-    leadBy: {
-        type: String,
-    },
+    leadBy: { type: String, required: true, index: true },
     leadByName: {
         type: String,
     },
@@ -19,6 +17,10 @@ const leadSchema = new mongoose.Schema({
         type: Number,
         min: 100
     },
+    acceptedViews: [{
+        type: String,
+        min: 100,
+    }],
     adLength: {
         type: Number,
         min: 5
@@ -45,7 +47,7 @@ const leadSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: {
-            values: ["pending", "approved", "cancelled"],
+            values: ["pending", "approved", "cancelled", "completed"],
             message: '{VALUE} is not a valid status'
         },
         default: "pending",
