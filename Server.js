@@ -8,6 +8,8 @@ const { createLead, deleteLead, getuserLeads } = require('./userControllers/getU
 const { getSpecificUser } = require('./adminControllers/getUsersController.js');
 const { createConference, deleteConference, getuserConference } = require('./conferenceController/conferenceController.js');
 const { getMessagesFromUser, sendMessage } = require('./contactUsSchema&controller/contactUsController.js');
+const { acceptLead, getAcceptedLeadsReporter, getAllLeadsReporter, getCompletedLeadsReporter, getRelevantLeadsReporter, getPendingLeadsReporter } = require('./reporter/reporterController.js');
+
 
 const app = express();
 const PORT = 7000;
@@ -22,7 +24,7 @@ app.post('/loginUser', loginUser);
 app.get('/userProfile', verifyToken, userProfile);
 app.put('/updateUserDetails', verifyToken, updateUserDetails)
 
-
+// send a message to the db that admin can access
 app.post('/sendMessage',
     verifyToken,
     sendMessage
@@ -45,7 +47,14 @@ app.delete('/deleteConference', verifyToken, deleteConference)
 app.get('/getUserConference', verifyToken, getuserConference)
 
 
+// reporter apis
 
+app.get('/getAllLeadsReporter', verifyToken, getAllLeadsReporter);
+app.get('/getRelevantLeadsReporter', verifyToken, getRelevantLeadsReporter);
+app.post('/acceptLeadReporter', verifyToken, acceptLead);
+app.get('/getAcceptedLeadsReporter', verifyToken, getAcceptedLeadsReporter);
+app.get('/getCompletedLeadsReporter', verifyToken, getCompletedLeadsReporter);
+app.get('/getPendingLeadsReporter', verifyToken, getPendingLeadsReporter);
 
 app.get('/getSpecificUser',
     // adminVerifyToken,

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const transactionSchema = new mongoose.Schema({
-    userName:String,
-    
+    userName: String,
+    postDate
+
 }, { timestamps: true });
 
 

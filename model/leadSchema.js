@@ -18,9 +18,17 @@ const leadSchema = new mongoose.Schema({
         min: 100
     },
     acceptedViews: [{
-        acceptedBy: { type: String },
-        acceptedByName:{type:String},
+        acceptedBy: { type: String, index: true }, // Adding index here
+        acceptedByName: { type: String },
         acceptedAmount: { type: Number, min: 100 },
+        leadStatus: {
+            type: String,
+            enum: {
+                values: ["pending", "completed"],
+                message: '{VALUE} is not a valid status'
+            },
+            default: "pending",
+        },
     }],
     remainingViews: { type: Number },
     adLength: {

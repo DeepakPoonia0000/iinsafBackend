@@ -1,5 +1,71 @@
 const Lead = require("../model/leadSchema");
 
+const getAllLeadsReporter = async (req, res) => {
+    try {
+        const allLeads = await Lead.find();
+        res.status(200).json(allLeads);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
+const getRelevantLeadsReporter = async (req, res) => {
+    try {
+        const leads = await Lead.find({
+            // what type od leads you want tell the fields
+        });
+        res.json(leads);
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
+const getAcceptedLeadsReporter = async (req, res) => {
+    try {
+        const { userId } = req;
+        const leads = await Lead.find({
+            'acceptedViews.acceptedBy': userId // Query on indexed field
+        });
+        res.json(leads);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
+const getCompletedLeadsReporter = async (req, res) => {
+    try {
+        const { userId } = req; // Assuming userId is part of the request (e.g., req.userId or req.query)
+
+        const completedLeads = await Lead.find({
+            'acceptedViews.acceptedBy': userId, // Find the leads accepted by the user
+            'acceptedViews.leadStatus': 'completed' // Ensure the leadStatus is completed
+        });
+
+        res.status(200).json(completedLeads);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+const getPendingLeadsReporter = async (req, res) => {
+    try {
+        const { userId } = req; // Assuming userId is part of the request (e.g., req.userId or req.query)
+
+        const pendingLeads = await Lead.find({
+            'acceptedViews.acceptedBy': userId, // Find the leads accepted by the user
+            'acceptedViews.leadStatus': 'pending' // Ensure the leadStatus is pending
+        });
+
+        res.status(200).json(pendingLeads);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
 const acceptLead = async (req, res) => {
     try {
         const { leadId, acceptedViews } = req.body;
@@ -57,4 +123,4 @@ const acceptLead = async (req, res) => {
     }
 };
 
-module.exports = { acceptLead }
+module.exports = { acceptLead,getAcceptedLeadsReporter,getAllLeadsReporter,getCompletedLeadsReporter,getRelevantLeadsReporter,getPendingLeadsReporter }
