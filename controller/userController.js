@@ -20,6 +20,7 @@ const verifyToken = async (req, res, next) => {
         req.userId = decoded.id;
         const user = await User.findById(req.userId);
         req.userName = user.userName;
+        req.joinAs = user.joinAs;
         next();
     } catch (error) {
         res.status(401).json({ message: "Invalid token" });

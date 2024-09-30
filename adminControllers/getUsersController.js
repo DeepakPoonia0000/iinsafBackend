@@ -11,7 +11,6 @@ const getSpecificUser = async (req, res) => {
     }
 }
 
-
 module.exports = {
     getSpecificUser
 }

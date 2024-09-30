@@ -18,9 +18,11 @@ const leadSchema = new mongoose.Schema({
         min: 100
     },
     acceptedViews: [{
-        type: String,
-        min: 100,
+        acceptedBy: { type: String },
+        acceptedByName:{type:String},
+        acceptedAmount: { type: Number, min: 100 },
     }],
+    remainingViews: { type: Number },
     adLength: {
         type: Number,
         min: 5
